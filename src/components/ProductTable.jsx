@@ -6,6 +6,7 @@ import { db } from '../lib/firebase';
 const ProductTable = () => {
     const [products, setProducts] = useState([]);
     const [newProduct, setNewProduct] = useState({ name: '', price: '', image: '', description: '' });
+    const [editingProduct, setEditingProduct] = useState(null); // State for tracking the product being edited
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -18,18 +19,43 @@ const ProductTable = () => {
     }, []);
 
     const handleCreate = async () => {
-        await addDoc(collection(db, 'products'), newProduct);
-        setNewProduct({ name: '', price: '', image: '', description: '' });
+        // Validation: Check if all fields are filled
+        if (!newProduct.name || !newProduct.price || !newProduct.image || !newProduct.description) {
+            alert("Please fill in all fields before adding the product.");
+            return;
+        }
+
+        try {
+            const docRef = await addDoc(collection(db, 'products'), newProduct);
+            setProducts([...products, { ...newProduct, id: docRef.id }]); // Update UI with the new product
+            setNewProduct({ name: '', price: '', image: '', description: '' }); // Clear form fields
+            alert("Product added to Firebase database");
+        } catch (error) {
+            alert("Error adding product: " + error.message);
+        }
     };
 
-    const handleUpdate = async (id, updatedProduct) => {
-        const productDoc = doc(db, 'products', id);
-        await updateDoc(productDoc, updatedProduct);
+    const handleUpdate = (product) => {
+        setEditingProduct(product); // Set the selected product for editing
+        setNewProduct({ name: product.name, price: product.price, image: product.image, description: product.description });
+    };
+
+    const handleSaveUpdate = async () => {
+        if (editingProduct) {
+            const productDoc = doc(db, 'products', editingProduct.id);
+            await updateDoc(productDoc, newProduct);
+            setProducts(products.map(p => (p.id === editingProduct.id ? { ...newProduct, id: editingProduct.id } : p))); // Update the UI with the updated product
+            setEditingProduct(null); // Clear editing state
+            setNewProduct({ name: '', price: '', image: '', description: '' });
+            alert("Product updated successfully");
+        }
     };
 
     const handleDelete = async (id) => {
         const productDoc = doc(db, 'products', id);
         await deleteDoc(productDoc);
+        setProducts(products.filter(product => product.id !== id)); // Update UI by removing the deleted product
+        alert("Product deleted successfully");
     };
 
     return (
@@ -53,7 +79,7 @@ const ProductTable = () => {
                             <td className="border px-4 py-2"><img src={product.image} alt={product.name} className="h-16 w-16 object-cover" /></td>
                             <td className="border px-4 py-2">{product.description}</td>
                             <td className="border px-4 py-2">
-                                <button onClick={() => handleUpdate(product.id, product)} className="bg-yellow-500 text-white px-4 py-2">Update</button>
+                                <button onClick={() => handleUpdate(product)} className="bg-yellow-500 text-white px-4 py-2">Edit</button>
                                 <button onClick={() => handleDelete(product.id)} className="bg-red-500 text-white px-4 py-2 ml-2">
                                     Delete
                                 </button>
@@ -63,9 +89,9 @@ const ProductTable = () => {
                 </tbody>
             </table>
 
-            {/* Create new product */}
+            {/* Create or Update Product Form */}
             <div className="mt-8">
-                <h2 className="text-xl font-bold">Add New Product</h2>
+                <h2 className="text-xl font-bold">{editingProduct ? 'Edit Product' : 'Add New Product'}</h2>
                 <div className="flex flex-col space-y-4">
                     <input
                         type="text"
@@ -94,9 +120,15 @@ const ProductTable = () => {
                         onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
                         className="border p-2"
                     />
-                    <button onClick={handleCreate} className="bg-green-500 text-white px-4 py-2">
-                        Add Product
-                    </button>
+                    {editingProduct ? (
+                        <button onClick={handleSaveUpdate} className="bg-yellow-500 text-white px-4 py-2">
+                            Update Product
+                        </button>
+                    ) : (
+                        <button onClick={handleCreate} className="bg-green-500 text-white px-4 py-2">
+                            Add Product
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
@@ -104,4 +136,3 @@ const ProductTable = () => {
 };
 
 export default ProductTable;
-
