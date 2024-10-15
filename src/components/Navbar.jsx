@@ -1,22 +1,3 @@
-// import Link from 'next/link';
-
-// const Navbar = () => {
-//     return (
-//         <nav className="bg-blue-500 p-4">
-//             <div className="container mx-auto flex justify-between">
-//                 <div className="text-white text-lg font-bold">E-commerce</div>
-//                 <div className="space-x-4">
-//                     <Link href="/" className="text-white">Home</Link>
-//                     <Link href="/products" className="text-white">Products</Link>
-//                     <Link href="/signin" className="text-white">Sign In</Link>
-//                 </div>
-//             </div>
-//         </nav>
-//     );
-// };
-
-// export default Navbar;
-
 "use client"
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -49,9 +30,9 @@ const Navbar = () => {
 
     return (
         <nav className="bg-gray-800 p-4">
-            <div className="container mx-auto flex justify-between items-center">
+            <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
                 <h1 className="text-white">My E-commerce App</h1>
-                <div className="space-x-4">
+                <div className="space-x-4 flex flex-col md:flex-row justify-center items-center">
                     {user ? (
                         <>
                             <Link href="/" className="text-white">Home</Link>
