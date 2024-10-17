@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { auth, db } from '../lib/firebase';
 import { FaShoppingCart, FaCreditCard } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
@@ -25,10 +25,11 @@ const ProductTable = () => {
     const handleAddToCart = async (product) => {
         // Add product to Firestore 'cart' collection
         try {
+            const userId = auth.currentUser?.uid;
             await addDoc(collection(db, 'cart'), {
                 ...product,
                 quantity: 1,
-                userId: "user_id_placeholder" // Replace with actual user ID
+                userId: userId
             });
         } catch (error) {
             console.error("Error adding to cart:", error);
