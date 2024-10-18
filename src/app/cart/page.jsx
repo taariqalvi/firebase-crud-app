@@ -88,12 +88,12 @@ const Cart = () => {
     return (
         <div>
             <Navbar />
-            <div className="container mx-auto p-4">
+            <div className="container mx-auto p-4 mb-8">
                 <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
                 {cartItems.length === 0 ? (
                     <p>Your cart is empty.</p>
                 ) : (
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                         {cartItems.map(item => (
                             <div key={item.id} className="border p-4 rounded shadow">
                                 <img src={item.image} alt={item.name} className="h-32 w-32 object-cover" />
@@ -143,11 +143,12 @@ const Cart = () => {
                                 </div>
                             </div>
                         ))}
-                        <div className="mt-4">
-                            <h3 className="text-xl font-bold">Total Price: ${totalPrice.toFixed(2)}</h3>
-                        </div>
+
                     </div>
                 )}
+                <div className="mt-4">
+                    <h3 className="text-xl font-bold">Total Price: ${totalPrice.toFixed(2)}</h3>
+                </div>
             </div>
         </div>
     );

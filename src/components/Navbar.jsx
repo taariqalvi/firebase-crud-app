@@ -81,11 +81,16 @@ import { auth, db } from '../lib/firebase'; // Ensure db is imported from your F
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { FaShoppingCart } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
+
     const [user, setUser] = useState(null);
     const [cartItemCount, setCartItemCount] = useState(0);
+
     const router = useRouter();
+
+    const cartItems = useSelector(state => state.cart.cartItems);
 
     // Listen to authentication state changes
     useEffect(() => {
@@ -109,7 +114,7 @@ const Navbar = () => {
             const cartCollection = collection(db, 'cart');
             const q = query(cartCollection, where('userId', '==', userId)); // Fetch only the logged-in user's cart items
             const cartSnapshot = await getDocs(q);
-            
+
             if (!cartSnapshot.empty) {
                 const cartItems = cartSnapshot.docs.map(doc => doc.data());
                 console.log("Cart items fetched:", cartItems); // Debugging
@@ -132,6 +137,15 @@ const Navbar = () => {
         await signOut(auth);
         router.push('/signin');
     };
+
+    // Listen for changes in Redux cartItems and update cartItemCount
+    useEffect(() => {
+        if (user) {
+            // Calculate the item count directly from Redux state
+            const itemCount = cartItems.reduce((total, item) => total + (item.quantity || 0), 0);
+            setCartItemCount(itemCount);
+        }
+    }, [cartItems, user]);
 
     return (
         <nav className="bg-gray-800 p-4">
@@ -173,4 +187,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
