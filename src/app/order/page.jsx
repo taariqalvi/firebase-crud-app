@@ -76,7 +76,8 @@ const Order = () => {
                                         />
                                     </div>
                                     <h2 className="text-xl font-bold">{item.name}</h2>
-                                    <p>Price: ${item.price.toFixed(2)}</p>
+                                    {/* <p>Price: ${item.price.toFixed(2)}</p> */}
+                                    <p>Price: ${typeof item.price === 'number' ? item.price.toFixed(2) : '0.00'}</p>
                                     <p>Quantity: {item.quantity}</p>
                                     <p>Size: {item.size}</p>
                                 </div>

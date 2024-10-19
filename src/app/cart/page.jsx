@@ -2,7 +2,9 @@
 import Navbar from '@/components/Navbar';
 import { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { collection, getDocs, doc, deleteDoc, updateDoc, query, where } from 'firebase/firestore';
+// import { useAuth } from '../auth/AuthProvider';
 import { useRouter } from 'next/navigation';
 
 const Cart = () => {
@@ -11,17 +13,51 @@ const Cart = () => {
     const [totalPrice, setTotalPrice] = useState(0);
     const router = useRouter();
 
+    const [currentUser, setCurrentUser] = useState(null);
+
+    useEffect(() => {
+        const auth = getAuth();
+
+        // Listen for auth state changes
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setCurrentUser(user); // Set the user when logged in
+            } else {
+                setCurrentUser(null); // Reset if the user logs out
+            }
+        });
+
+        return () => unsubscribe(); // Clean up the listener on unmount
+    }, []);
+
+
     useEffect(() => {
         const fetchCartItems = async () => {
+            if (!currentUser) return; // Ensure user is logged in
+
             const cartCollection = collection(db, 'cart');
-            const cartSnapshot = await getDocs(cartCollection);
+            const cartQuery = query(cartCollection, where('userId', '==', currentUser.uid)); // Filter by userId
+            const cartSnapshot = await getDocs(cartQuery);
             const items = cartSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
             setCartItems(items);
             calculateTotalPrice(items); // Calculate initial total price
         };
 
         fetchCartItems();
-    }, []);
+    }, [currentUser]); // Re-fetch whenever the current user changes
+
+    // useEffect(() => {
+    //     const fetchCartItems = async () => {
+    //         const cartCollection = collection(db, 'cart');
+    //         const cartSnapshot = await getDocs(cartCollection);
+    //         const items = cartSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    //         setCartItems(items);
+    //         calculateTotalPrice(items); // Calculate initial total price
+    //     };
+
+    //     fetchCartItems();
+    // }, []);
 
     // Helper to calculate total price
     const calculateTotalPrice = (items) => {
@@ -98,7 +134,8 @@ const Cart = () => {
                             <div key={item.id} className="border p-4 rounded shadow">
                                 <img src={item.image} alt={item.name} className="h-32 w-32 object-cover" />
                                 <h2 className="text-xl font-bold">{item.name}</h2>
-                                <p>Price: ${item.price.toFixed(2)}</p>
+                                {/* <p>Price: ${item.price.toFixed(2)}</p> */}
+                                <p>Price: ${Number(item.price).toFixed(2) || '0.00'}</p>
                                 <p>Quantity: {item.quantity}</p>
                                 <div>
                                     <label htmlFor={`size-${item.id}`}>Size:</label>
