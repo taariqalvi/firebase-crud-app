@@ -82,47 +82,49 @@ const ProductTable = () => {
     return (
         <div className="container mx-auto p-4">
             <h1 className="text-2xl font-bold mb-4">Product List</h1>
-            <table className="min-w-full bg-white">
-                <thead>
-                    <tr>
-                        <th className="border px-4 py-2">Name</th>
-                        <th className="border px-4 py-2">Price</th>
-                        <th className="border px-4 py-2">Image</th>
-                        <th className="border px-4 py-2">Description</th>
-                        <th className="border px-4 py-2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {products.map(product => (
-                        <tr key={product.id}>
-                            <td className="border px-4 py-2">{product.name}</td>
-                            <td className="border px-4 py-2">{product.price}</td>
-                            <td className="border px-4 py-2">
-                                <div className="flex items-center">
-                                    <img src={product.image} alt={product.name} className="h-16 w-16 object-cover" />
-                                    <div className="ml-4 flex items-center gap-2">
-                                        <FaShoppingCart
-                                            className="text-green-500 cursor-pointer text-2xl"
-                                            onClick={() => handleAddToCart(product)}
-                                            title="Add to Cart"
-                                        />
-                                        <FaCreditCard
-                                            className="text-blue-500 cursor-pointer text-2xl"
-                                            onClick={() => handleBuyNow(product)}
-                                            title="Buy Now"
-                                        />
-                                    </div>
-                                </div>
-                            </td>
-                            <td className="border px-4 py-2">{product.description}</td>
-                            <td className="border px-4 py-2 flex gap-2">
-                                <button onClick={() => handleUpdate(product)} className="bg-yellow-500 text-white px-4 py-1">Edit</button>
-                                <button onClick={() => handleDelete(product.id)} className="bg-red-500 text-white px-4 py-1">Delete</button>
-                            </td>
+            <div className="overflow-x-scroll">
+                <table className="min-w-full bg-white">
+                    <thead>
+                        <tr>
+                            <th className="border px-4 py-2">Name</th>
+                            <th className="border px-4 py-2">Price</th>
+                            <th className="border px-4 py-2">Image</th>
+                            <th className="border px-4 py-2">Description</th>
+                            <th className="border px-4 py-2">Actions</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {products.map(product => (
+                            <tr key={product.id}>
+                                <td className="border px-4 py-2">{product.name}</td>
+                                <td className="border px-4 py-2">{product.price}</td>
+                                <td className="border px-4 py-2">
+                                    <div className="flex flex-col md:flex-row items-center justify-center gap-2">
+                                        <img src={product.image} alt={product.name} className="h-16 w-16 object-cover" />
+                                        <div className="flex items-center justify-center gap-2">
+                                            <FaShoppingCart
+                                                className="text-green-500 cursor-pointer text-2xl"
+                                                onClick={() => handleAddToCart(product)}
+                                                title="Add to Cart"
+                                            />
+                                            <FaCreditCard
+                                                className="text-blue-500 cursor-pointer text-2xl"
+                                                onClick={() => handleBuyNow(product)}
+                                                title="Buy Now"
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className="border px-4 py-2">{product.description}</td>
+                                <td className="border px-4 py-2 flex gap-2">
+                                    <button onClick={() => handleUpdate(product)} className="bg-yellow-500 text-white px-4 py-1">Edit</button>
+                                    <button onClick={() => handleDelete(product.id)} className="bg-red-500 text-white px-4 py-1">Delete</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
             {/* Create or Update Product Form */}
             <div className="mt-8">
                 <h2 className="text-xl font-bold">{editingProduct ? 'Edit Product' : 'Add New Product'}</h2>

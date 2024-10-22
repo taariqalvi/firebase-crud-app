@@ -18,10 +18,7 @@ const Order = () => {
     useEffect(() => {
         if (user) {
             fetchCartItems(user.uid); // Fetch the cart items for the logged-in user
-        } else {
-            router.push('/signin'); // Redirect to signin if no user is logged in
-        }
-    }, [user]);
+        }}, [user]);
 
     // Fetch ordered items (cart items) from Firestore
     const fetchCartItems = async (userId) => {
@@ -60,7 +57,7 @@ const Order = () => {
                     <p>Your order is empty.</p>
                 ) : (
                     <>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                             {orderedItems.map(item => (
                                 <div key={item.id} className="flex flex-col items-center border p-4 rounded shadow">
                                     <div
