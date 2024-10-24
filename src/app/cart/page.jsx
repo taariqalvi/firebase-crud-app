@@ -36,16 +36,16 @@ const Cart = () => {
             if (!currentUser) return; // Ensure user is logged in
 
             const cartCollection = collection(db, 'cart');
-            const cartQuery = query(cartCollection, where('userId', '==', currentUser.uid)); // Filter by userId
+            const cartQuery = query(cartCollection, where('userId', '==', currentUser.uid));
             const cartSnapshot = await getDocs(cartQuery);
             const items = cartSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
             setCartItems(items);
-            calculateTotalPrice(items); // Calculate initial total price
+            calculateTotalPrice(items);
         };
 
         fetchCartItems();
-    }, [currentUser]); // Re-fetch whenever the current user changes
+    }, [currentUser]);
 
     // useEffect(() => {
     //     const fetchCartItems = async () => {

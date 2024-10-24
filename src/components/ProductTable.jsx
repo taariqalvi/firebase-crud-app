@@ -23,18 +23,46 @@ const ProductTable = () => {
     }, []);
 
     const handleAddToCart = async (product) => {
-        // Add product to Firestore 'cart' collection
         try {
             const userId = auth.currentUser?.uid;
-            await addDoc(collection(db, 'cart'), {
-                ...product,
-                quantity: 1,
-                userId: userId
-            });
+
+            // Reference to the user's cart collection
+            const cartCollection = collection(db, 'cart');
+            const cartSnapshot = await getDocs(cartCollection);
+            const cartItems = cartSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+
+            // Check if the product already exists in the cart
+            const existingCartItem = cartItems.find(item => item.productId === product.id && item.userId === userId);
+
+            if (existingCartItem) {
+                // If the product exists, update its quantity and price
+                const cartItemRef = doc(db, 'cart', existingCartItem.id);
+                const newQuantity = existingCartItem.quantity + 1;
+                const newPrice = parseFloat(existingCartItem.price) + parseFloat(product.price);
+
+                await updateDoc(cartItemRef, {
+                    quantity: newQuantity,
+                    price: newPrice
+                });
+
+            } else {
+                // If the product does not exist, add it to the cart
+                await addDoc(cartCollection, {
+                    productId: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    description: product.description,
+                    quantity: 1,
+                    userId: userId
+                });
+            }
+
         } catch (error) {
             console.error("Error adding to cart:", error);
         }
     };
+
 
     const handleCreate = async () => {
         if (!newProduct.name || !newProduct.price || !newProduct.image || !newProduct.description) {

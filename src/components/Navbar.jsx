@@ -3,8 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, db } from '../lib/firebase'; // Ensure db is imported from your Firebase config
-import { collection, getDoc, doc } from 'firebase/firestore';
-import { getDocs, query, where } from 'firebase/firestore';
+import { collection, getDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { FaShoppingCart } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
@@ -86,7 +85,10 @@ const Navbar = () => {
                         <>
                             <Link href="/" className="text-white">Home</Link>
                             <Link href="/products" className="text-white">Products</Link>
-                            {isAdmin && <Link href="/admin-dashboard" className="text-white">Admin Dashboard</Link>} {/* Admin link */}
+                            {isAdmin ? 
+                            <Link href="/admin-dashboard" className="text-white">Admin Dashboard</Link>
+                            :
+                            <Link href="/user-dashboard" className="text-white">User Dashboard</Link>}
                             <span className="text-white">Welcome, {user.email}</span>
                             <Link href="/cart" className="relative text-white">
                                 <FaShoppingCart className="text-2xl" />
