@@ -65,7 +65,7 @@ const UserDashboard = () => {
                                 <div>
                                     <h3 className="font-semibold">Products:</h3>
                                     <ul className="list-disc list-inside">
-                                        {order.products.map((product) => (
+                                        {order.products?.map((product) => (
                                             <li key={product.productId}>
                                                 {product.name} - Quantity: {product.quantity}, Price: ${product.price}
                                             </li>

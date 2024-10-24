@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { collection, getDocs, doc, deleteDoc, updateDoc, query, where } from 'firebase/firestore';
-// import { useAuth } from '../auth/AuthProvider';
 import { useRouter } from 'next/navigation';
 
 const Cart = () => {
@@ -30,7 +29,6 @@ const Cart = () => {
         return () => unsubscribe(); // Clean up the listener on unmount
     }, []);
 
-
     useEffect(() => {
         const fetchCartItems = async () => {
             if (!currentUser) return; // Ensure user is logged in
@@ -46,18 +44,6 @@ const Cart = () => {
 
         fetchCartItems();
     }, [currentUser]);
-
-    // useEffect(() => {
-    //     const fetchCartItems = async () => {
-    //         const cartCollection = collection(db, 'cart');
-    //         const cartSnapshot = await getDocs(cartCollection);
-    //         const items = cartSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    //         setCartItems(items);
-    //         calculateTotalPrice(items); // Calculate initial total price
-    //     };
-
-    //     fetchCartItems();
-    // }, []);
 
     // Helper to calculate total price
     const calculateTotalPrice = (items) => {
@@ -83,10 +69,14 @@ const Cart = () => {
         if (item) {
             try {
                 const newQuantity = item.quantity + 1;
-                await updateDoc(doc(db, 'cart', id), { quantity: newQuantity }); // Update Firestore
+                const newPrice = parseFloat(item.price / item.quantity) * newQuantity; // Adjust individual price based on quantity
+
+                await updateDoc(doc(db, 'cart', id), { quantity: newQuantity, price: newPrice }); // Update Firestore
+
                 const updatedCartItems = cartItems.map(item =>
-                    item.id === id ? { ...item, quantity: newQuantity } : item
+                    item.id === id ? { ...item, quantity: newQuantity, price: newPrice } : item
                 );
+
                 setCartItems(updatedCartItems); // Update UI after increment
                 calculateTotalPrice(updatedCartItems); // Recalculate total price
             } catch (error) {
@@ -101,10 +91,14 @@ const Cart = () => {
         if (item && item.quantity > 1) {
             try {
                 const newQuantity = item.quantity - 1;
-                await updateDoc(doc(db, 'cart', id), { quantity: newQuantity }); // Update Firestore
+                const newPrice = parseFloat(item.price / item.quantity) * newQuantity; // Adjust individual price based on quantity
+
+                await updateDoc(doc(db, 'cart', id), { quantity: newQuantity, price: newPrice }); // Update Firestore
+
                 const updatedCartItems = cartItems.map(item =>
-                    item.id === id ? { ...item, quantity: newQuantity } : item
+                    item.id === id ? { ...item, quantity: newQuantity, price: newPrice } : item
                 );
+
                 setCartItems(updatedCartItems); // Update UI after decrement
                 calculateTotalPrice(updatedCartItems); // Recalculate total price
             } catch (error) {
@@ -121,6 +115,11 @@ const Cart = () => {
         router.push(`/order?productId=${productId}`);
     };
 
+    const handleBuyAll = () => {
+         router.push('/order?all=true');
+     };
+
+
     return (
         <div>
             <Navbar />
@@ -134,8 +133,7 @@ const Cart = () => {
                             <div key={item.id} className="border p-4 rounded shadow">
                                 <img src={item.image} alt={item.name} className="h-32 w-32 object-cover" />
                                 <h2 className="text-xl font-bold">{item.name}</h2>
-                                {/* <p>Price: ${item.price.toFixed(2)}</p> */}
-                                <p>Price: ${Number(item.price).toFixed(2) || '0.00'}</p>
+                                <p>Price: PKR {Number(item.price).toFixed(2)}</p> {/* Display the updated price */}
                                 <p>Quantity: {item.quantity}</p>
                                 <div>
                                     <label htmlFor={`size-${item.id}`}>Size:</label>
@@ -171,20 +169,25 @@ const Cart = () => {
                                     >
                                         Delete
                                     </button>
-                                    <button
+                                    {/* <button
                                         onClick={() => handleBuy(item.id)}
                                         className="px-2 py-1 bg-blue-500 text-white rounded ml-2"
                                     >
                                         Buy
-                                    </button>
+                                    </button> */}
                                 </div>
                             </div>
                         ))}
-
                     </div>
                 )}
                 <div className="mt-4">
-                    <h3 className="text-xl font-bold">Total Price: ${totalPrice.toFixed(2)}</h3>
+                    <h3 className="text-xl font-bold">Total Price: PKR {totalPrice.toFixed(2)}</h3>
+                    <button
+                        onClick={handleBuyAll}
+                        className="px-4 py-2 bg-purple-500 text-white rounded mt-4"
+                    >
+                        Buy
+                    </button>
                 </div>
             </div>
         </div>

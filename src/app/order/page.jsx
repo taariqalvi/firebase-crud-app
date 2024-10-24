@@ -74,7 +74,7 @@ const Order = () => {
                                     </div>
                                     <h2 className="text-xl font-bold">{item.name}</h2>
                                     {/* <p>Price: ${item.price.toFixed(2)}</p> */}
-                                    <p>Price: ${typeof item.price === 'number' ? item.price.toFixed(2) : '0.00'}</p>
+                                    <p>Price: PKR {typeof item.price === 'number' ? item.price.toFixed(2) : '0.00'}</p>
                                     <p>Quantity: {item.quantity}</p>
                                     <p>Size: {item.size}</p>
                                 </div>
@@ -83,7 +83,7 @@ const Order = () => {
 
                         {/* Total Price Section */}
                         <div className="mt-8">
-                            <h2 className="text-xl font-bold">Total Price: ${totalPrice.toFixed(2)}</h2>
+                            <h2 className="text-xl font-bold">Total Price: PKR {totalPrice.toFixed(2)}</h2>
                         </div>
 
                         {/* Checkout Button */}
@@ -104,3 +104,96 @@ const Order = () => {
 
 export default Order;
 
+// "use client";
+// import { useEffect, useState } from 'react';
+// import { useRouter, useSearchParams } from 'next/navigation';
+// import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
+// import { db } from '@/lib/firebase';
+// import { getAuth } from 'firebase/auth';
+// import Navbar from '@/components/Navbar';
+
+// const OrderPage = () => {
+//     const [orderItems, setOrderItems] = useState([]);
+//     const [currentUser, setCurrentUser] = useState(null);
+//     const router = useRouter();
+//     const searchParams = useSearchParams();
+
+//     useEffect(() => {
+//         const auth = getAuth();
+//         const unsubscribe = auth.onAuthStateChanged((user) => {
+//             if (user) {
+//                 setCurrentUser(user);
+//             } else {
+//                 router.push('/login');
+//             }
+//         });
+
+//         return () => unsubscribe();
+//     }, [router]);
+
+//     useEffect(() => {
+//         const fetchOrderItems = async () => {
+//             const isBuyAll = searchParams.get('all') === 'true';
+//             const productId = searchParams.get('productId');
+
+//             if (currentUser) {
+//                 let items = [];
+
+//                 if (isBuyAll) {
+//                     // Buy all items
+//                     const cartCollection = collection(db, 'cart');
+//                     const cartQuery = query(cartCollection, where('userId', '==', currentUser.uid));
+//                     const cartSnapshot = await getDocs(cartQuery);
+//                     items = cartSnapshot.docs.map(doc => doc.data());
+//                 } else if (productId) {
+//                     // Buy one item
+//                     const cartCollection = collection(db, 'cart');
+//                     const cartQuery = query(cartCollection, where('userId', '==', currentUser.uid), where('id', '==', productId));
+//                     const cartSnapshot = await getDocs(cartQuery);
+//                     items = cartSnapshot.docs.map(doc => doc.data());
+//                 }
+
+//                 setOrderItems(items);
+
+//                 // Add order items to Firestore "orders" collection
+//                 const ordersCollection = collection(db, 'orders');
+//                 for (const item of items) {
+//                     await addDoc(ordersCollection, {
+//                         ...item,
+//                         userId: currentUser.uid,
+//                         orderDate: new Date(),
+//                     });
+//                 }
+//             }
+//         };
+
+//         fetchOrderItems();
+//     }, [currentUser, searchParams]);
+
+//     return (
+//         <div>
+//             <Navbar />
+//             <div className="container mx-auto p-4">
+//                 <h1 className="text-2xl font-bold mb-4">Your Order</h1>
+//                 {orderItems.length === 0 ? (
+//                     <p>No items in your order.</p>
+//                 ) : (
+//                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+//                         {orderItems.map((item, index) => (
+//                             <div key={index} className="border p-4 rounded shadow">
+//                                 <img src={item.image} alt={item.name} className="h-32 w-32 object-cover" />
+//                                 <h2 className="text-xl font-bold">{item.name}</h2>
+//                                 <p>Price: PKR {item.price}</p>
+//                                 <p>Quantity: {item.quantity}</p>
+//                                 <p>Size: {item.size || 'N/A'}</p>
+//                                 <p>Ordered on: {new Date().toDateString()}</p>
+//                             </div>
+//                         ))}
+//                     </div>
+//                 )}
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default OrderPage;
