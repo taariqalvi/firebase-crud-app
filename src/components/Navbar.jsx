@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, db } from '../lib/firebase'; // Ensure db is imported from your Firebase config
 import { collection, getDoc, doc } from 'firebase/firestore';
+import { getDocs, query, where } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { FaShoppingCart } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
@@ -46,7 +47,9 @@ const Navbar = () => {
     const fetchCartItemCount = async (userId) => {
         try {
             const cartCollection = collection(db, 'cart');
-            const cartSnapshot = await getDocs(cartCollection);
+            const q = query(cartCollection, where('userId', '==', userId)); // Fetch only the logged-in user's cart items
+            const cartSnapshot = await getDocs(q);
+    
             if (!cartSnapshot.empty) {
                 const cartItems = cartSnapshot.docs.map(doc => doc.data());
                 const itemCount = cartItems.reduce((total, item) => total + (item.quantity || 0), 0);

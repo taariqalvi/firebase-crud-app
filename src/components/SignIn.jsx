@@ -42,6 +42,7 @@ const SignIn = () => {
             const user = userCredential.user;
             // Check role after login
             await checkUserRole(user);
+            router.push('/');
         } catch (error) {
             setError(error.message);
         }
