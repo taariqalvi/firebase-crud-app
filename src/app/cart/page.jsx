@@ -1,5 +1,4 @@
 "use client";
-import Navbar from '@/components/Navbar';
 import { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -116,25 +115,41 @@ const Cart = () => {
     };
 
     const handleBuyAll = () => {
-         router.push('/order?all=true');
-     };
+        // router.push('/order?all=true');
+        router.push('/checkout');
+    };
 
 
     return (
         <div>
-            <Navbar />
             <div className="container mx-auto p-4 mb-8">
                 <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
                 {cartItems.length === 0 ? (
                     <p>Your cart is empty.</p>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="">
                         {cartItems.map(item => (
-                            <div key={item.id} className="border p-4 rounded shadow">
-                                <img src={item.image} alt={item.name} className="h-32 w-32 object-cover" />
+                            <div key={item.id} className="flex flex-col md:flex-row items-center justify-between gap-4 border p-4 mb-2 rounded shadow">
+                                <img src={item.image} alt={item.name} className="h-10 w-10 object-cover" />
                                 <h2 className="text-xl font-bold">{item.name}</h2>
-                                <p>Price: PKR {Number(item.price).toFixed(2)}</p> {/* Display the updated price */}
-                                <p>Quantity: {item.quantity}</p>
+                                <p>Price: PKR {Number(item.price).toFixed(2)}</p>
+
+                                <div className="flex items-center">
+                                    <button
+                                        onClick={() => handleIncrement(item.id)}
+                                        className="px-2 py-1 bg-green-500 text-white rounded"
+                                    >
+                                        +
+                                    </button>
+                                    <p className="mx-2">Quantity: {item.quantity}</p>
+                                    <button
+                                        onClick={() => handleDecrement(item.id)}
+                                        className="px-2 py-1 bg-yellow-500 text-white rounded"
+                                    >
+                                        -
+                                    </button>
+                                </div>
+
                                 <div>
                                     <label htmlFor={`size-${item.id}`}>Size:</label>
                                     <select
@@ -150,31 +165,13 @@ const Cart = () => {
                                         <option value="XL">XL</option>
                                     </select>
                                 </div>
-                                <div className="mt-2">
-                                    <button
-                                        onClick={() => handleIncrement(item.id)}
-                                        className="px-2 py-1 bg-green-500 text-white rounded"
-                                    >
-                                        +
-                                    </button>
-                                    <button
-                                        onClick={() => handleDecrement(item.id)}
-                                        className="px-2 py-1 bg-yellow-500 text-white rounded ml-2"
-                                    >
-                                        -
-                                    </button>
+                                <div className="">
                                     <button
                                         onClick={() => handleDelete(item.id)}
-                                        className="px-2 py-1 bg-red-500 text-white rounded ml-2"
+                                        className="px-2 py-1 bg-red-500 text-white rounded"
                                     >
                                         Delete
                                     </button>
-                                    {/* <button
-                                        onClick={() => handleBuy(item.id)}
-                                        className="px-2 py-1 bg-blue-500 text-white rounded ml-2"
-                                    >
-                                        Buy
-                                    </button> */}
                                 </div>
                             </div>
                         ))}
@@ -186,7 +183,7 @@ const Cart = () => {
                         onClick={handleBuyAll}
                         className="px-4 py-2 bg-purple-500 text-white rounded mt-4"
                     >
-                        Buy
+                        Buy Now
                     </button>
                 </div>
             </div>

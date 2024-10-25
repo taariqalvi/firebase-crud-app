@@ -4,7 +4,6 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import Navbar from '@/components/Navbar';
 
 const UserDashboard = () => {
     const [orders, setOrders] = useState([]);
@@ -47,7 +46,6 @@ const UserDashboard = () => {
 
     return (
         <div>
-            <Navbar />
             <div className="p-6 bg-gray-100">
                 <h1 className="text-4xl font-bold mb-6">User Dashboard</h1>
 

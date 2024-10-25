@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from 'react';
-import Navbar from '@/components/Navbar';
 import { useRouter } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js'; // Stripe SDK for card payments
 import PayPalButton from '@/components/PayPalButton'; // Assume this is a custom component wrapping PayPal SDK
 
 // Load Stripe (Replace with your Stripe public key)
-const stripePromise = loadStripe('your_stripe_public_key');
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_API_KEY);
 
 const Checkout = () => {
     const [paymentMethod, setPaymentMethod] = useState('stripe');
@@ -19,11 +18,11 @@ const Checkout = () => {
         const { error } = await stripe.redirectToCheckout({
             lineItems: [
                 {
-                    price: 'your_stripe_price_id', // Replace with the actual Stripe price ID
+                    price: 'price_1QDlxGCBAY0IsMbaqCChqYGZ', // Replace with the actual Stripe price ID
                     quantity: 1,
                 },
             ],
-            mode: 'payment',
+            mode: 'subscription',
             successUrl: `${window.location.origin}/confirmation`,
             cancelUrl: `${window.location.origin}/checkout`,
         });
@@ -51,7 +50,6 @@ const Checkout = () => {
 
     return (
         <div>
-            <Navbar />
             <div className="container mx-auto p-4">
                 <h1 className="text-3xl font-bold mb-4">Checkout</h1>
 

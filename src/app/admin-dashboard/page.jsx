@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import Navbar from '@/components/Navbar';
 
 const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
@@ -26,7 +25,6 @@ const AdminDashboard = () => {
 
     return (
         <div>
-            <Navbar />
             <div className="container mx-auto p-4">
                 <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
                 <table className="min-w-full bg-white">

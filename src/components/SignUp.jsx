@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { auth, db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
-import Navbar from '../components/Navbar';
+
 
 const SignUp = () => {
     const router = useRouter();
@@ -54,7 +54,6 @@ const SignUp = () => {
 
     return (
         <div>
-            <Navbar />
             <div className="container mx-auto p-4 w-full md:w-1/2">
                 <h1 className="text-3xl font-bold">Sign Up</h1>
                 {error && <p className="text-red-500">{error}</p>}
