@@ -114,10 +114,29 @@ const Cart = () => {
         router.push(`/order?productId=${productId}`);
     };
 
-    const handleBuyAll = () => {
-        // router.push('/order?all=true');
-        router.push('/checkout');
+    // const handleBuyAll = () => {
+    //     // router.push('/order?all=true');
+    //     router.push('/checkout');
+    // };
+
+    const handleBuyAll = async () => {
+        try {
+            const response = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cartItems }),
+            });
+
+            if (!response.ok) throw new Error('Failed to create checkout session');
+
+            const { url } = await response.json();
+            router.push(url);
+        } catch (error) {
+            console.error('Error in handleBuyAll:', error);
+        }
     };
+
+
 
 
     return (

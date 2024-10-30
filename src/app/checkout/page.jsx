@@ -12,6 +12,27 @@ const Checkout = () => {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+    // async function handleCheckout(cartItems) {
+    //     setLoading(true);
+    //     const stripe = await stripePromise;
+
+    //     // Create a checkout session
+    //     const response = await fetch('/api/create-checkout-session', {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ cartItems }),
+    //     });
+
+    //     const session = await response.json();
+
+    //     // Redirect to checkout
+    //     const result = await stripe.redirectToCheckout({ sessionId: session.id });
+    //     if (result.error) {
+    //         console.error(result.error.message);
+    //         setLoading(false);
+    //     }
+    // }
+
     const handleStripePayment = async () => {
         setLoading(true);
         const stripe = await stripePromise;
@@ -42,6 +63,7 @@ const Checkout = () => {
     const handlePayment = () => {
         if (paymentMethod === 'stripe') {
             handleStripePayment();
+            // handleCheckout();
         } else if (paymentMethod === 'paypal') {
             // PayPal button component handles payment directly, so no need for extra logic here
             return;
