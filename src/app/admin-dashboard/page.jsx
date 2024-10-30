@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import Messages from '@/components/Messages';
 
 const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
@@ -27,6 +28,13 @@ const AdminDashboard = () => {
         <div>
             <div className="container mx-auto p-4">
                 <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+
+                <div>
+                    <h3 className="text-2xl text-center font-bold bg-slate-600 text-white py-4">Notifications</h3>
+                    <Messages />
+                </div>
+
+                <h3 className="text-2xl text-center font-bold mt-6 bg-slate-600 text-white py-4">Users</h3>
                 <table className="min-w-full bg-white">
                     <thead>
                         <tr>

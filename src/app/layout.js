@@ -4,6 +4,8 @@ import "./globals.css";
 import { Provider } from "react-redux";
 import store from "@/redux-store";
 import Navbar from "@/components/Navbar";
+import { initializeFirebaseMessaging } from "@/lib/firebasemessaging";
+import { useEffect } from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -22,12 +24,19 @@ const geistMono = localFont({
 // };
 
 export default function RootLayout({ children }) {
+
+  useEffect(() => {
+    // Initialize Firebase Messaging with the service worker
+    initializeFirebaseMessaging();
+  }, []);
+
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Provider store={store}>
           <Navbar />
-        {children}
+          {children}
         </Provider>
       </body>
     </html>
