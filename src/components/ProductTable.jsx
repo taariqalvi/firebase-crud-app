@@ -115,7 +115,7 @@ const ProductTable = () => {
                     <thead>
                         <tr>
                             <th className="border px-4 py-2">Name</th>
-                            <th className="border px-4 py-2">Price</th>
+                            <th className="border px-4 py-2">Price $</th>
                             <th className="border px-4 py-2">Image</th>
                             <th className="border px-4 py-2">Description</th>
                             <th className="border px-4 py-2">Actions</th>

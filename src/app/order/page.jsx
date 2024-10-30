@@ -61,7 +61,7 @@ const OrderPage = () => {
             <h1 className="text-2xl font-bold mb-4">Order Page</h1>
             <div className="border p-4 rounded shadow">
                 <h2 className="text-xl font-bold">{product.name}</h2>
-                <p>Price: PKR {Number(product.price).toFixed(2)}</p>
+                <p>Price: $ {Number(product.price).toFixed(2)}</p>
                 <img src={product.image} alt={product.name} className="h-32 w-32 object-cover mt-2" />
                 <button
                     onClick={handleBuyNow}

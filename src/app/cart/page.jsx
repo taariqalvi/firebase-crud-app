@@ -151,7 +151,7 @@ const Cart = () => {
                             <div key={item.id} className="flex flex-col md:flex-row items-center justify-between gap-4 border p-4 mb-2 rounded shadow">
                                 <img src={item.image} alt={item.name} className="h-10 w-10 object-cover" />
                                 <h2 className="text-xl font-bold">{item.name}</h2>
-                                <p>Price: PKR {Number(item.price).toFixed(2)}</p>
+                                <p>Price: $ {Number(item.price).toFixed(2)}</p>
 
                                 <div className="flex items-center">
                                     <button
@@ -197,7 +197,7 @@ const Cart = () => {
                     </div>
                 )}
                 <div className="mt-4">
-                    <h3 className="text-xl font-bold">Total Price: PKR {totalPrice.toFixed(2)}</h3>
+                    <h3 className="text-xl font-bold">Total Price: $ {totalPrice.toFixed(2)}</h3>
                     <button
                         onClick={handleBuyAll}
                         className="px-4 py-2 bg-purple-500 text-white rounded mt-4"
