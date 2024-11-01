@@ -58,7 +58,7 @@ const AdminDashboard = () => {
                     </div>
 
                     {/* Notifications Section */}
-                    <div className="flex-1">
+                    <div className="">
                         <h3 className="text-2xl text-center font-bold bg-slate-600 text-white py-4 rounded-lg shadow-lg">Notifications</h3>
                         <div className="mt-4 md:mt-0">
                             <Messages />

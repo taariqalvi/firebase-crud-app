@@ -79,7 +79,7 @@ const Navbar = () => {
     return (
         <nav className="bg-gray-800 p-4">
             <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-                <h1 className="text-white">My E-commerce App</h1>
+                <h1 className="font-bold text-red-500">My E-Commerce App</h1>
                 <div className="space-x-4 flex flex-col md:flex-row justify-center items-center">
                     {user ? (
                         <>
