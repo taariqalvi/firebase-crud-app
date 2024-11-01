@@ -26,14 +26,14 @@ const AdminDashboard = () => {
 
     return (
         <div>
-            <div className="container mx-auto p-4">
-                <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+            <div className="p-4">
+                <h1 className="text-3xl font-bold mb-6 text-center md:text-left">Admin Dashboard</h1>
 
-                <div className="flex flex-col md:flex-row items-start gap-4">
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
                     {/* Users Table */}
                     <div className="flex-1">
-                        <h3 className="text-2xl text-center font-bold mt-6 md:mt-0 bg-slate-600 text-white py-4 rounded-lg shadow-lg">Users</h3>
-                        <div className="overflow-x-auto">
+                        <h3 className="text-2xl text-center font-bold mt-6 md:mt-0 bg-slate-600 text-white py-4 shadow-lg">Users</h3>
+                        <div className="overflow-x-scroll">
                             <table className="min-w-full bg-white rounded-lg shadow-md">
                                 <thead className="bg-gray-200">
                                     <tr>
@@ -59,7 +59,7 @@ const AdminDashboard = () => {
 
                     {/* Notifications Section */}
                     <div className="">
-                        <h3 className="text-2xl text-center font-bold bg-slate-600 text-white py-4 rounded-lg shadow-lg">Notifications</h3>
+                        <h3 className="text-2xl text-center font-bold bg-slate-600 text-white py-4 shadow-lg">Notifications</h3>
                         <div className="mt-4 md:mt-0">
                             <Messages />
                         </div>

@@ -122,9 +122,9 @@ const Messages = () => {
     };
 
     return (
-        <div className="p-4 bg-gray-100 rounded shadow-md w-full max-w-lg mx-auto">
+        <div className="p-4 bg-gray-100 shadow-md w-full max-w-lg mx-auto">
             <Toaster />
-            <h2 className="text-xl font-semibold mb-4">Notifications</h2>
+            {/* <h2 className="text-xl font-semibold mb-4">Notifications</h2> */}
             {messages.length === 0 ? (
                 <p>No new notifications.</p>
             ) : (

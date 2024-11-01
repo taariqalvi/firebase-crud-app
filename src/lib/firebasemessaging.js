@@ -22,7 +22,7 @@ export const initializeFirebaseMessaging = async () => {
             const registration = await navigator.serviceWorker.register(
                 "/firebase-messaging-sw.js"
             );
-            messaging.useServiceWorker(registration);
+            // messaging.useServiceWorker(registration);
             console.log("Service Worker registered:", registration);
         } catch (error) {
             console.error("Service Worker registration failed:", error);
