@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { getMessaging, onMessage, getToken } from 'firebase/messaging';
 import { initializeApp } from 'firebase/app';
+import toast, { Toaster } from "react-hot-toast";
 
 // Your Firebase config
 const firebaseConfig = {
@@ -26,6 +27,12 @@ const Messages = () => {
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
+        // Load messages from localStorage on mount
+        const savedMessages = localStorage.getItem("notifications");
+        if (savedMessages) {
+            setMessages(JSON.parse(savedMessages));
+        }
+
         const setupMessaging = async () => {
             // Register the service worker
             if ('serviceWorker' in navigator) {
@@ -59,8 +66,15 @@ const Messages = () => {
                     timestamp: new Date().toLocaleString(),
                 };
 
-                // Add new message to the messages array
-                setMessages((prevMessages) => [newMessage, ...prevMessages]);
+                // Display toast notification
+                toast(`${newMessage.title}: ${newMessage.body}`);
+
+                // Update messages and save to localStorage
+                setMessages((prevMessages) => {
+                    const updatedMessages = [newMessage, ...prevMessages];
+                    localStorage.setItem("notifications", JSON.stringify(updatedMessages));
+                    return updatedMessages;
+                });
             });
 
             // Cleanup function to unsubscribe from messages on component unmount
@@ -72,8 +86,20 @@ const Messages = () => {
         setupMessaging();
     }, []);
 
+    const handleDelete = (index) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this notification?");
+        if (confirmDelete) {
+            // Remove the message at the given index
+            const updatedMessages = messages.filter((_, i) => i !== index);
+            setMessages(updatedMessages);
+            localStorage.setItem("notifications", JSON.stringify(updatedMessages));
+        }
+    };
+
+
     return (
         <div className="p-4 bg-gray-100 rounded shadow-md w-full max-w-lg mx-auto mt-8">
+            <Toaster /> {/* Render the Toaster component here */}
             <h2 className="text-xl font-semibold mb-4">Notifications</h2>
             {messages.length === 0 ? (
                 <p>No new notifications.</p>
@@ -82,11 +108,19 @@ const Messages = () => {
                     {messages.map((msg, index) => (
                         <li
                             key={index}
-                            className="bg-white p-4 mb-2 rounded shadow-sm border-l-4 border-blue-500"
+                            className="bg-white p-4 mb-2 rounded shadow-sm border-l-4 border-blue-500 flex justify-between items-start"
                         >
-                            <h3 className="font-bold">{msg.title}</h3>
-                            <p>{msg.body}</p>
-                            <span className="text-sm text-gray-500">{msg.timestamp}</span>
+                            <div>
+                                <h3 className="font-bold">{msg.title}</h3>
+                                <p>{msg.body}</p>
+                                <span className="text-sm text-gray-500">{msg.timestamp}</span>
+                            </div>
+                            <button
+                                onClick={() => handleDelete(index)}
+                                className="ml-4 text-red-500 hover:text-red-700"
+                            >
+                                Delete
+                            </button>
                         </li>
                     ))}
                 </ul>
