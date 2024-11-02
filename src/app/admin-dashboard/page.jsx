@@ -33,7 +33,7 @@ const AdminDashboard = () => {
                     {/* Users Table */}
                     <div className="flex-1">
                         <h3 className="text-2xl text-center font-bold mt-6 md:mt-0 bg-slate-600 text-white py-4 shadow-lg">Users</h3>
-                        <div className="overflow-x-scroll">
+                        <div className="">
                             <table className="min-w-full bg-white rounded-lg shadow-md">
                                 <thead className="bg-gray-200">
                                     <tr>
